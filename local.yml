@@ -56,6 +56,7 @@
 
     - name: delete existing judgehost init scripts
       command: /usr/sbin/update-rc.d -f domjudge-judgehost remove removes=/etc/rc0.d/K20domjudge-judgehost
+
     - name: delete old init script
       file: path=/etc/init.d/domjudge-judgehost state=absent
 
@@ -91,36 +92,36 @@
       apt: pkg={{ item }} state=present
       with_items:
         - build-essential           # c/c++
-        - ghc                       # haskell
-        - fpc                       # pascal
+        # - ghc                       # haskell
+        # - fpc                       # pascal
         - python                    # python 2.7
         - python3                   # python 3
-        - gnat                      # gnu ada
-        - gfortran                  # fortran
-        - mono-complete             # c#
+        # - gnat                      # gnu ada
+        # - gfortran                  # fortran
+        # - mono-complete             # c#
         #- fsharp                    # fsharp
         - lua5.2                    # lua
         #- oracle-java7-installer   # java7
         - oracle-java8-installer    # java8
-        - gccgo                     # go reference compiler
-        - golang                    # go using gcc
-        - ruby                      # ruby
-        - nodejs                    # javascript
-        - gdc                       # D
+        # - gccgo                     # go reference compiler
+        # - golang                    # go using gcc
+        # - ruby                      # ruby
+        # - nodejs                    # javascript
+        # - gdc                       # D
 
-    - name: check for scala
-      stat: path=/usr/bin/scala
-      register: has_scala
-    - name: get scala deb file
-      get_url: url=http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.deb dest=/tmp/scala.deb
-      when: not has_scala.stat.exists
-    - name: install scala
-      apt: deb=/tmp/scala.deb
-      when: not has_scala.stat.exists
+    # - name: check for scala
+    #   stat: path=/usr/bin/scala
+    #   register: has_scala
+    # - name: get scala deb file
+    #   get_url: url=http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.deb dest=/tmp/scala.deb
+    #   when: not has_scala.stat.exists
+    # - name: install scala
+    #   apt: deb=/tmp/scala.deb
+    #   when: not has_scala.stat.exists
 
-    - name: do something with ufw
-      ufw: logging=off
-      tags: ['domjudge-judgehost', 'ufw']
+    # - name: do something with ufw
+    #   ufw: logging=off
+    #   tags: ['domjudge-judgehost', 'ufw']
 
   handlers:
     - name: update grub
