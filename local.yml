@@ -6,9 +6,9 @@
       apt: update_cache=yes
 
   vars:
-    domjudge_api_endpoint: http://some-endpoint.example.com/api
+    domjudge_api_endpoint: https://judge.svia.nl/api
     domjudge_api_endpoint_user: judgehost
-    domjudge_api_endpoint_pass: judgehost_pass
+    domjudge_api_endpoint_pass: todo
     domjudge_repo: 'deb http://domjudge.org/debian unstable/'
     domjudge_repo_key: 'http://domjudge.org/repokey.asc'
 
@@ -54,21 +54,6 @@
       service: name=domjudge-judgehost state=stopped
       when: installdj.changed
 
-    - name: delete existing judgehost init scripts
-      command: /usr/sbin/update-rc.d -f domjudge-judgehost remove removes=/etc/rc0.d/K20domjudge-judgehost
-
-    - name: delete old init script
-      file: path=/etc/init.d/domjudge-judgehost state=absent
-
-    - name: install our own init scripts
-      copy: src=files/{{item}} dest=/etc/init/{{item}}
-      with_items:
-        - judgedaemon-instance.conf
-        - judgedaemons.conf
-
-    - name: enable swap accounting(for cgroups)
-      lineinfile: dest=/etc/default/grub.d/50-cloudimg-settings.cfg regexp="^GRUB_CMDLINE_LINUX_DEFAULT=" line='GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 swapaccount=1"' state=present
-      notify: update grub
 
     - name: install debootstrap which is used when making the chroot
       apt: pkg=debootstrap state=latest
@@ -99,8 +84,8 @@
         # - gnat                      # gnu ada
         # - gfortran                  # fortran
         # - mono-complete             # c#
-        #- fsharp                    # fsharp
-        - lua5.2                    # lua
+        # - fsharp                    # fsharp
+        # - lua5.2                    # lua
         #- oracle-java7-installer   # java7
         - oracle-java8-installer    # java8
         # - gccgo                     # go reference compiler
@@ -108,6 +93,10 @@
         # - ruby                      # ruby
         # - nodejs                    # javascript
         # - gdc                       # D
+
+    # - name: enable swap accounting(for cgroups)
+    #   lineinfile: dest=/etc/default/grub.d/50-cloudimg-settings.cfg regexp="^GRUB_CMDLINE_LINUX_DEFAULT=" line='GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 swapaccount=1"' state=present
+    #   notify: update grub
 
     # - name: check for scala
     #   stat: path=/usr/bin/scala

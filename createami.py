@@ -11,7 +11,8 @@ from email.mime.text import MIMEText
 # Choose the hvm:ebs-ssd "Instance Type" for say trusty us-east
 # BASEAMI = 'ami-fdb9fc98'  # Trusty 14.04 amd64 hvm:ebs-ssd 2015-09-28
 # baseami = 'ami-5c207736'  # Trusty 14.04 amd64 hvm:ebs-ssd 2015-12-18
-BASEAMI = 'ami-f95ef58a'  # ubuntu-trusty-14.04-amd64-server-20160114.5  HVMSSD
+# BASEAMI = 'ami-f95ef58a'  # ubuntu-trusty-14.04-amd64-server-20160114.5
+BASEAMI = 'ami-3079f543'  # ubuntu-trusty-14.04-amd64-server-20160114.5  HVMSSD
 REGION = 'eu-west-1'
 # ssh_keypair = 'domjudge-aws'
 # ssh_securitygroup = 'open-ssh'
