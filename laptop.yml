@@ -61,7 +61,7 @@
       lineinfile: dest=/etc/hosts line="145.100.98.5 judge.svia.nl" state=present
       tags: test1
 
-    - name: clear IPtable
+    - name: clear IPtable and install rules
       command: iptables {{ item }}
       with_items:
       - -F
@@ -73,9 +73,21 @@
       - -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
       - -A INPUT -s 145.100.98.5/32 -j ACCEPT
       - -A INPUT -i lo -j ACCEPT
+      - -A INPUT -p udp --dport 67:68 --sport 67:68 -j ACCEPT
       - -A INPUT -j REJECT --reject-with icmp-port-unreachable
       - -A OUTPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
       - -A OUTPUT -d 145.100.98.5/32 -j ACCEPT
+      - -A OUTPUT -p udp --dport 67:68 --sport 67:68 -j ACCEPT
       - -A OUTPUT -j REJECT
       tags: iptest
 
+    - name: prevent the iptables-peristent install dialog
+      debconf: name=iptables-persistent question={{ item }} vtype=boolean value=true
+      with_items:
+      - iptables-persistent/autosave_v4
+      - iptables-persistent/autosave_v6
+      tags: iptest
+
+    - name: Install iptables-persistent
+      apt: pkg=iptables-persistent state=present
+      tags: iptest
