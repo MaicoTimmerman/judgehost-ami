@@ -92,5 +92,5 @@
       - -A OUTPUT -j REJECT
       tags: iptest
 
-   - name: Save iptable rules to file.
-     shell: iptables-save > /etc/iptables/rules.v4
+    - name: Save iptable rules to file.
+      shell: iptables-save > /etc/iptables/rules.v4
