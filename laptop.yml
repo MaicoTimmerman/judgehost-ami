@@ -15,6 +15,24 @@
         - python-apt
         - software-properties-common
 
+    - name: Delete old openssh-server keys
+      file: path=/etc/ssh/{{item}} state=absent
+      with_items:
+        - ssh_host_dsa_key
+        - ssh_host_dsa_key.pub
+        - ssh_host_ecdsa_key
+        - ssh_host_ecdsa_key.pub
+        - ssh_host_ed25519_key
+        - ssh_host_ed25519_key.pub
+        - ssh_host_rsa_key
+        - ssh_host_rsa_key.pub
+      tags: openssh
+
+    - name: Regenerate keys
+      command: dpkg-reconfigure openssh-server
+      tags: openssh
+
+
 
     - name: Accept Java 8 License
       debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
