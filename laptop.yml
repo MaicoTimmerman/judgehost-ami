@@ -61,6 +61,17 @@
       lineinfile: dest=/etc/hosts line="145.100.98.5 judge.svia.nl" state=present
       tags: test1
 
+    - name: prevent the iptables-peristent install dialog
+      debconf: name=iptables-persistent question={{ item }} vtype=boolean value=true
+      with_items:
+      - iptables-persistent/autosave_v4
+      - iptables-persistent/autosave_v6
+      tags: iptest
+
+    - name: Install iptables-persistent
+      apt: pkg=iptables-persistent state=present
+      tags: iptest
+
     - name: clear IPtable and install rules
       command: iptables {{ item }}
       with_items:
@@ -81,13 +92,5 @@
       - -A OUTPUT -j REJECT
       tags: iptest
 
-    - name: prevent the iptables-peristent install dialog
-      debconf: name=iptables-persistent question={{ item }} vtype=boolean value=true
-      with_items:
-      - iptables-persistent/autosave_v4
-      - iptables-persistent/autosave_v6
-      tags: iptest
-
-    - name: Install iptables-persistent
-      apt: pkg=iptables-persistent state=present
-      tags: iptest
+   - name: Save iptable rules to file.
+     shell: iptables-save > /etc/iptables/rules.v4
